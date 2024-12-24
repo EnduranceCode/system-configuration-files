@@ -1,0 +1,10 @@
+GIMP Palette
+Name: Triatl3ta
+Columns: 1
+#
+  0   0   0	black
+255 255 255	white
+ 63  81 181	primary
+ 48  63 159	primary-dark
+121 134 203	primary-light
+244  67  54	accent
