@@ -51,6 +51,8 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 # Git related command aliases
 # ----------------------------------------------------------------------------------------------------------------------
 
+alias cgb='clear && git branch'
+alias gb='git branch'
 alias cgl='clear && git log --oneline -15'
 alias gl='git log --oneline -15'
 alias cgs='clear && git status'
@@ -98,37 +100,73 @@ set-author()
 # Set the date of a commit
 #
 # Made with the help of the following resource:
-#	+ https://smarterco.de/set-the-username-and-email-in-git-globally-and-per-project/#set-the-usernameemail-for-a-specific-repository
-#	+ https://www.cyberciti.biz/faq/bash-remove-whitespace-from-string/
+# https://smarterco.de/set-the-username-and-email-in-git-globally-and-per-project/#set-the-usernameemail-for-a-specific-repository
+# https://www.cyberciti.biz/faq/bash-remove-whitespace-from-string/
 #
 set-date()
 {
-	echo "This will set a new date for the last commit"
-	echo "--------------------------------------------"
-	echo
-	echo "The last commit has the following $(git log -1 | grep Date)"
-	echo
-	IFS= read -r -p "Type, NOT PASTE, the new commit's date using the format displayed above: " NEW_DATE
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        echo
+        echo -e "[\e[31mERROR\e[0m] Not inside a Git repository!"
+        echo
+        return 1
+    fi
 
-	if [ ! -z "${NEW_DATE}" ]
-		then
+    if ! git diff --cached --quiet; then
+        echo
+        echo -e "[\e[31mERROR\e[0m] You have staged changes! Aborting to prevent their inclusion in the amended commit."
+        echo
+        return 1
+    fi
 
-			# Remove leading, trailing and multiple white spaces from the string
-			NEW_DATE=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'<<<"${NEW_DATE}")
-			NEW_DATE=$(echo "${NEW_DATE}" | xargs)
+    echo
+    echo "This will set a new date for the following commit:"
+    echo
+    echo -e "\t$(git log -1 --format=%cd --date=format:"%Y-%m-%dT%H:%M:%S")\t$(git log -1 --oneline --no-color --format=%s)"
+    echo
 
-			echo
-			GIT_COMMITTER_DATE=\""${NEW_DATE}"\" git commit --amend --no-edit --date \""${NEW_DATE}"\"
+    local LIMIT_DATE
+    LIMIT_DATE=$(git log -2 --format=%cd --date=format:"%Y-%m-%dT%H:%M:%S" | tail -n1)
 
-			echo
-			echo "The last commit is now set with the following $(git log -1 | grep Date)"
-			echo
-		else
+    echo "The new date must be in a valid ISO8601 or RFC2822 format and must be later than ${LIMIT_DATE}"
+    echo
+    echo -e "\t[ISO8601]\t1996-01-23T08:00:00"
+    echo -e "\t[RFC2822]\tTue, 23 Jan 1996 08:00:00 +0000"
+    echo
 
-			echo
-			echo "The date of the last commit wasn't changed"
-			echo
-	fi
+    read -e -r -p "Type the new commit's date: " NEW_DATE
+    echo
+
+	NEW_DATE=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'<<<"${NEW_DATE}")
+	NEW_DATE=$(echo "$NEW_DATE" | xargs)
+
+    if [[ -z "${NEW_DATE}" ]]; then
+        echo -e "[\e[31mERROR\e[0m] No date entered! No changes were made to the last commit's date."
+        echo
+        return 1
+    fi
+
+    if ! date -d "${NEW_DATE}" >/dev/null 2>&1; then
+        echo -e "[\e[31mERROR\e[0m] Invalid date format! No changes were made to the last commit's date. Please use a valid RFC2822 or ISO8601 date."
+        echo
+        return 1
+    fi
+
+    if [ "$(date -d "$NEW_DATE" +%s)" -le "$(date -d "$LIMIT_DATE" +%s)" ]; then
+        echo -e "[\e[31mERROR\e[0m] Invalid date! No changes were made to the last commit's date. Please provide a date later than $LIMIT_DATE."
+        echo
+        return 1
+    fi
+
+    if GIT_COMMITTER_DATE="${NEW_DATE}" git commit --no-verify --amend --no-edit --date "${NEW_DATE}"; then
+        echo
+        echo -e "[\e[34mINFO\e[0m] The last commit date is now: $(git log -1 --format=%cd)"
+    else
+        echo -e "[\e[31mERROR\e[0m] Failed to amend the commit date."
+        echo
+        return 1
+    fi
+    echo
 }
 
 # List all files changed with a specific commit
