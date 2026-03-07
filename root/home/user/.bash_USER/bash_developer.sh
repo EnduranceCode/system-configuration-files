@@ -3,7 +3,7 @@
 # FILE CONTENT ---------------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------------------
 #
-# This files contains git related custom bash aliases and fucntions. Source it from the bash_"${USER}".sh file on the
+# This files contains git related custom bash aliases and functions. Source it from the bash_"${USER}".sh file on the
 # ~/.bash_"${USER}" folder, adding the below snippet on the referred bash_"${USER}".sh file.
 #
 #   if [ -f ~/.bash_"${USER}"/bash_git.sh ]; then
@@ -16,10 +16,9 @@
 # -----------------
 #
 # + Global development command aliases
-# + Project specific development command aliases
 # + Global development custom bash functions
 #   + set-eslint()
-# + Project specific development custom bash functions
+# + Projects related custom bash aliases and functions
 #
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -29,11 +28,6 @@
 alias code-dev='clear && echo "[code]" && echo "------" && cd ~/code && ls --group-directories-first -la'
 
 alias npm-global='npm list -g --depth 0'
-
-# Project specific development command aliases
-# ----------------------------------------------------------------------------------------------------------------------
-
-alias code-endurancetrio='clear && echo "[code/endurancetrio-community]" && echo "------------------------------" && cd ~/code/endurancetrio-community'
 
 # Global development related bash functions
 # ----------------------------------------------------------------------------------------------------------------------
@@ -51,5 +45,12 @@ set-eslint()
     echo "You now must copy the file .eslintrc.json to the root folder of the project"
 }
 
-# Project specific development custom bash functions
+# Projects related custom bash aliases and functions
 # ----------------------------------------------------------------------------------------------------------------------
+
+# To enable Projects related bash aliases and functions a file with specific customizations must be sourced here.
+# One file per project should be used (The name of the file - bash_project.sh - should be customized for each project)
+#
+# if [ -f ~/.bash_"${USER}"/bash_project.sh ]; then
+#     source ~/.bash_"${USER}"/bash_project.sh
+# fi

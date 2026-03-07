@@ -17,7 +17,7 @@
 #
 # + Enable git tab completion for branch names
 # + Change command prompt in repositories
-# + Shows '*' in prompt of repositoires with uncommited changes
+# + Shows '*' in prompt of repositories with uncommitted changes
 # + Git related command aliases
 # + Git related custom bash functions
 #   + set-author()
@@ -34,7 +34,7 @@
 # If the feature isn't working, uncomment the below to try to enable it
 
 # source ~/.git_prompt/.git-completion.bash
- 
+
 # Change command prompt in repositories
 #
 # The following command is commented because it seems that the current git versions
@@ -43,7 +43,7 @@
 #
 # source ~/.git_prompt/.git-prompt.sh
 
-# Shows '*' in prompt of repositoires with uncommited changes
+# Shows '*' in prompt of repositories with uncommitted changes
 # -----------------------------------------------------------
 #
 export GIT_PS1_SHOWDIRTYSTATE=1
