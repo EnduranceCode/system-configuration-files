@@ -73,27 +73,58 @@ alias gpr='git pull --rebase'
 #
 set-author()
 {
-	echo "This will set the author's name and e-mail for this repository"
-	echo "--------------------------------------------------------------"
-	echo
-	IFS= read -r -p "Type the name of the repository's author: " USERNAME
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        echo -e "[\e[31mERROR\e[0m] Not inside a Git repository!"
+        echo
+        return 1
+    fi
 
-	if [ ! -z "${USERNAME}" ]
-		then
-			read -p "Type the e-mail of the repository's author: " EMAIL
-	fi
+    local USERNAME=""
+    local EMAIL=""
+    local OPTIND
 
-	if [ ! -z "${USERNAME}" ] && [ ! -z "${EMAIL}" ]
-		then
-			git config user.name "${USERNAME}"
-			git config user.email "${EMAIL}"
-	fi
+    usage() {
+        echo "Usage: set-author [-u username] [-e email] [-h]"
+        echo
+        echo "Options:"
+        echo "  -u    Set the git user.name"
+        echo "  -e    Set the git user.email"
+        echo "  -h    Display this help message"
+    }
 
-	echo
-	echo "This repository author is set with the following name and e-mail:"
-	echo "-----------------------------------------------------------------"
-	git config --get user.name
-	git config --get user.email
+    while getopts "u:e:h" opt; do
+        case $opt in
+            u) USERNAME="$OPTARG" ;;
+            e) EMAIL="$OPTARG" ;;
+            h) usage; return 0 ;;
+            *) usage; return 1 ;;
+        esac
+    done
+    shift $((OPTIND - 1))
+
+	echo -e "[\e[34mINFO\e[0m] Setting the author's name and email for this repository"
+
+    if [ -z "$USERNAME" ]; then
+        echo
+        read -r -p "Type the name of the repository's author: " USERNAME
+    fi
+
+    if [ -z "$EMAIL" ]; then
+        echo
+        read -r -p "Type the email of the repository's author: " EMAIL
+    fi
+
+	if [ ! -z "${USERNAME}" ] && [ ! -z "${EMAIL}" ]; then
+		git config user.name "${USERNAME}"
+		git config user.email "${EMAIL}"
+	else
+        echo -e "[\e[31mERROR\e[0m] Missing required information. The repository author not updated."
+        echo
+        return 1
+    fi
+
+	echo -e "[\e[34mINFO\e[0m] This repository author is set with name: $(git config --get user.name)"
+	echo -e "[\e[34mINFO\e[0m] This repository author is set with email: $(git config --get user.email)"
 	echo
 }
 
