@@ -39,6 +39,7 @@
 # color codes from https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
 # colors!
 #
+# shellcheck disable=SC2034
 black="\[\033[0;30m\]"
 red="\[\033[0;31m\]"
 green="\[\033[0;32m\]"
@@ -73,6 +74,7 @@ export PS1="$brightMagenta[\h]$reset:$green\u$reset:$red\W$yellow\$(__git_ps1) $
 # ----------------------------------------------------------------------------------------------------------------------
 
 if [ -f ~/.bash_"${USER}"/bash_generic.sh ]; then
+    # shellcheck disable=SC1090
     source ~/.bash_"${USER}"/bash_generic.sh
 fi
 
@@ -80,6 +82,7 @@ fi
 # ----------------------------------------------------------------------------------------------------------------------
 
 if [ -f ~/.bash_"${USER}"/bash_git.sh ]; then
+    # shellcheck disable=SC1090
     source ~/.bash_"${USER}"/bash_git.sh
 fi
 
@@ -87,5 +90,6 @@ fi
 # ----------------------------------------------------------------------------------------------------------------------
 
 if [ -f ~/.bash_"${USER}"/bash_developer.sh ]; then
+    # shellcheck disable=SC1090
     source ~/.bash_"${USER}"/bash_developer.sh
 fi

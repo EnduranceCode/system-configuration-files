@@ -1,13 +1,13 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 #
 # FILE CONTENT ---------------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------------------
 #
-# This files contains generic custom bash aliases and functions. Source it from the bash_"${USER}".sh file on the
-# ~/.bash_"${USER}" folder, adding the below snippet on the referred bash_"${USER}".sh file.
+# This files contains generic custom zsh aliases and functions. Source it from the zsh_"${USER}".sh file on the
+# ~/.zsh_"${USER}" folder, adding the below snippet on the referred zsh_"${USER}".sh file.
 #
-#   if [ -f ~/.bash_"${USER}"/bash_generic.sh ]; then
-#       source ~/.bash_"${USER}"/bash_generic.sh
+#   if [ -f ~/.zsh_"${USER}"/zsh_generic.sh ]; then
+#       source ~/.zsh_"${USER}"/zsh_generic.sh
 #   fi
 #
 # ----------------------------------------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@
 # -----------------
 #
 # + Global Command aliases
-# + Global Custom bash functions
+# + Global Custom zsh functions
 #   + path()
 #
 # ----------------------------------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@
 
 alias ld='ls --group-directories-first -la'
 
-# Global custom bash functions
+# Global custom zsh functions
 # ----------------------------------------------------------------------------------------------------------------------
 
 # List PATH variables on a formatted mode as explained on the nixCraft blog
